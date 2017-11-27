@@ -87,6 +87,7 @@ function getDriver() {
   options.setProfile(profile);
 
   const builder = new webdriver.Builder()
+    .withCapabilities({'moz:webdriverClick': false})
     .forBrowser("firefox")
     .setFirefoxOptions(options);
 
@@ -111,6 +112,12 @@ function promiseFinally(promise, finallyCallback) {
   }, (error) => {
     finallyCallback();
     throw error;
+  });
+}
+
+function setTimeoutPromise(time) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, time);
   });
 }
 
@@ -245,6 +252,11 @@ describe("Test Screenshots", function() {
       return skipOnboarding(driver);
     }).then(() => {
       return focusIframe(driver, PRESELECTION_IFRAME_ID);
+    }).then(() => {
+      // This avoids a problem where the UI has been instantiated, and handlers
+      // added, but not everything is fully setup yet; by waiting we give it
+      // time to set everything up
+      return setTimeoutPromise(500);
     }).then(() => {
       return driver.wait(
         until.elementLocated(By.css(".visible"))

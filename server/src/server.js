@@ -44,7 +44,7 @@ const gaActivation = require("./ga-activation");
 const genUuid = require("nodify-uuid");
 const statsd = require("./statsd");
 const { notFound } = require("./pages/not-found/server");
-const { cacheTime, setCache } = require("./caching");
+const { cacheTime, setMonthlyCache, setDailyCache } = require("./caching");
 const { captureRavenException, sendRavenMessage,
         addRavenRequestHandler, addRavenErrorHandler } = require("./ravenclient");
 const { errorResponse, simpleResponse, jsResponse } = require("./responses");
@@ -116,7 +116,7 @@ const FXA_SERVER = config.fxa.profileServer && require("url").parse(config.fxa.p
 function addHSTS(req, res) {
   // Note: HSTS will only produce warning on a localhost self-signed cert
   if (req.protocol === "https" && !config.localhostSsl) {
-    let time = 24 * 60 * 60 * 1000; // 24 hours
+    let time = 24 * 60 * 60; // 24 hours
     res.header(
       "Strict-Transport-Security",
       `max-age=${time}`);
@@ -159,7 +159,7 @@ app.use((req, res, next) => {
 });
 
 function isApiUrl(url) {
-  return url.startsWith("/api") || url === "/event";
+  return url.startsWith("/api") || url === "/event" || url === "/timing";
 }
 
 app.use((req, res, next) => {
@@ -290,7 +290,7 @@ app.param("id", function(req, res, next, id) {
 });
 
 app.param("domain", function(req, res, next, domain) {
-  if (/^[^\s/]{1,100}$/.test(domain)) {
+  if (/^[^\s/]{1,252}$/.test(domain)) {
     next();
     return;
   }
@@ -307,7 +307,7 @@ app.get("/ga-activation-hashed.js", function(req, res) {
 
 function sendGaActivation(req, res, hashPage) {
   let promise;
-  setCache(res, {private: true});
+  setMonthlyCache(res, {private: true});
   if (req.deviceId) {
     promise = hashUserId(req.deviceId).then((uuid) => {
       return uuid.toString();
@@ -326,7 +326,7 @@ function sendGaActivation(req, res, hashPage) {
 const parentHelperJs = readFileSync(path.join(__dirname, "/static/js/parent-helper.js"), {encoding: "UTF-8"});
 
 app.get("/parent-helper.js", function(req, res) {
-  setCache(res);
+  setMonthlyCache(res);
   let postMessageOrigin = `${req.protocol}://${req.config.contentOrigin}`;
   let script = `${parentHelperJs}\nvar CONTENT_HOSTING_ORIGIN = "${postMessageOrigin}";`
   jsResponse(res, script);
@@ -335,7 +335,7 @@ app.get("/parent-helper.js", function(req, res) {
 const ravenClientJs = readFileSync(require.resolve("raven-js/dist/raven.min"), {encoding: "UTF-8"});
 
 app.get("/install-raven.js", function(req, res) {
-  setCache(res);
+  setMonthlyCache(res);
   if (!req.config.sentryPublicDSN) {
     jsResponse(res, "");
     return;
@@ -445,6 +445,29 @@ app.post("/event", function(req, res) {
       params.ua = req.headers["user-agent"];
     }
     userAnalytics.event(params).send();
+    simpleResponse(res, "OK", 200);
+  }).catch((e) => {
+    errorResponse(res, "Error creating user UUID:", e);
+  });
+});
+
+app.post("/timing", function(req, res) {
+  let bodyObj = req.body;
+  if (typeof bodyObj !== "object") {
+    throw new Error(`Got unexpected req.body type: ${typeof bodyObj}`);
+  }
+  hashUserId(req.deviceId).then((userUuid) => {
+    let userAnalytics = ua(config.gaId, userUuid.toString(), {strictCidFormat: false});
+    if (config.debugGoogleAnalytics) {
+      userAnalytics = userAnalytics.debug();
+    }
+    let params = {
+      userTimingCategory: bodyObj.timingCategory,
+      userTimingVariableName: bodyObj.timingVar,
+      userTimingTime: bodyObj.timingValue,
+      userTimingLabel: bodyObj.timingLabel
+    };
+    userAnalytics.timing(params).send();
     simpleResponse(res, "OK", 200);
   }).catch((e) => {
     errorResponse(res, "Error creating user UUID:", e);
@@ -881,6 +904,7 @@ app.get("/images/:imageid", function(req, res) {
           res.header("Content-Disposition", contentDisposition(download));
         }
       }
+      setDailyCache(res);
       res.status(200);
       res.send(obj.data);
     }

@@ -18,7 +18,11 @@ gScreenshotsDescription = திரைப்பிடிப்புகள் �
 
 // Note: link text for a link to mozilla.org
 footerLinkMozilla = மொசில்லா
+footerLinkTerms = விதிமுறைகள்
 footerLinkPrivacy = தனியுரிம அறிக்கை
+footerLinkFaqs = அகேகேகள்
+footerLinkDMCA = IP வரம்ப மீறுதலை புகார் செய் 
+footerLinkDiscourse = கருத்து தெரிவிக்கவும்
 footerLinkRemoveAllData = அனைத்து தரவையும் நீக்கு
 
 
@@ -29,6 +33,7 @@ footerLinkRemoveAllData = அனைத்து தரவையும் நீ�
 // creatingPageTitleDefault.
 creatingPageTitle = { $title } உருவாக்குகிறது
 creatingPageTitleDefault = பக்கம்
+creatingPageWaitMessage = உங்களது படத்தைச் சேமிக்கிறது...
 
 
 [[ Home page ]]
@@ -52,7 +57,7 @@ homePageCookiesLink = நினைவிகள்
 
 [[ Leave Screenshots page ]]
 
-leavePageConfirmDelete = கணக்கு அழிப்பை உறுதிப்படுத்து
+leavePageRemoveAllData = அனைத்து தகவலையும் நீக்கு
 // Note: do not translate 'Firefox Screenshots' when translating this string
 leavePageErrorAddonRequired = உங்களின் கணக்கை அழிக்க பயர்பாஃசு திரைபிடிப்புகள் நிறுவப்பட்டிருக்க வேண்டும்
 leavePageErrorGeneric = ஒரு பிழை ஏற்பட்டது:

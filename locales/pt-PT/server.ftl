@@ -39,11 +39,11 @@ creatingPageWaitMessage = A guardar a sua captura...
 [[ Home page ]]
 
 homePageDescription
-    .content = Capturas de ecrã intuitivas embutidas no navegador. Capture, guarde e partilhe capturas de ecrã enquanto navega a Web utilizando o Firefox.
+    .content = Capturas de ecrã intuitivas embutidas no navegador. Capture, guarde e partilhe capturas de ecrã enquanto navega na Web utilizando o Firefox.
 homePageButtonMyShots = Ir para as minhas capturas
 homePageTeaser = Brevemente...
 homePageDownloadFirefoxTitle = Firefox
-homePageDownloadFirefoxSubTitle = Descarga gratuita
+homePageDownloadFirefoxSubTitle = Transferência gratuita
 homePageGetStarted = Começar
 // Note: do not translate 'Firefox Screenshots' when translating this string
 homePageHowScreenshotsWorks = Como é que o Firefox Screenshots funciona
@@ -54,7 +54,7 @@ homePageGetStartedDescription = Encontre o novo ícone do Screenshots na sua bar
 homePageGetStartedDescriptionPageAction = Selecione o ícone do Screenshots a partir do menu de ações da página na barra de endereço e o menu do Screenshots irá aparecer por cima da janela do seu navegador.
 homePageCaptureRegion = Capturar uma região
 // Note: Screenshots is an abbreviation for Firefox Screenshots, and should not be translated.
-homePageCaptureRegionDescription = Clique e arraste para selecionar a área que deseja capturar ou paire e clique — O Screenshots irá selecionar a área por si. Gosta do que está a ver? Selecione Guardar para aceder à sua captura de ecrã na Internet ou no botão de seta para baixo para a descarregar para o seu computador.
+homePageCaptureRegionDescription = Clique e arraste para selecionar a área que deseja capturar ou paire e clique — O Screenshots irá selecionar a área por si. Gosta do que está a ver? Selecione Guardar para aceder à sua captura de ecrã na Internet ou no botão de seta para baixo para a transferir para o seu computador.
 homePageCapturePage = Capturar uma página
 homePageCapturePageDescription = Utilize os botões no canto superior direito para capturar páginas inteiras. O botão Guardar visível irá capturar a área que pode ver sem deslocar e Guardar página inteira irá capturar tudo na página.
 homePageSaveShare = Guardar e partilhar
@@ -124,8 +124,8 @@ shotPageDeleteButton
 shotPageAbuseButton
     .title = Reportar esta captura por abuso, spam, ou outros problemas
 shotPageDownloadShot
-    .title = Descarregar
-shotPageDownload = Descarregar
+    .title = Transferir
+shotPageDownload = Transferir
 shotPageScreenshotsDescription = As capturas de ecrã tornadas simples. Tire, guarde e partilhe capturas de ecrã sem sair do Firefox.
 shotPageUpsellFirefox = Obter o Firefox agora
 shotPageDMCAMessage = Esta captura já não está disponível devido a uma reivindicação de propriedade intelectual de terceiros.
@@ -137,7 +137,7 @@ shotPageDMCAWarning = Se as suas capturas estão sujeitas a múltiplas reivindic
 shotPageDMCAIncludeLink = Por favor inclua o URL desta captura no seu email: { $url }
 shotPageKeepFor = Por quanto tempo deve esta captura ser retida?
 // Note: shotPageSelectTime is a placeholder label for the time selection dropdown.
-shotPageSelectTime = Selecione o tempo
+shotPageSelectTime = Selecionar tempo
 shotPageKeepIndefinitely = Indefinidamente
 shotPageKeepTenMinutes = 10 minutos
 shotPageKeepOneHour = 1 hora
@@ -202,6 +202,10 @@ shotIndexPageNoSearchResults = Não conseguimos encontrar quaisquer capturas que
 shotIndexPageClearSearchButton
     .title = Limpar pesquisa
 shotIndexPageConfirmShotDelete = Apagar esta captura?
+shotIndexPagePreviousPage
+    .title = Página anterior
+shotIndexPageNextPage
+    .title = Página seguinte
 
 
 // all metrics strings are optional for translation
@@ -236,7 +240,7 @@ metricsPageRetentionQueryFirstWeek = Semana em que o utilizador primeiro criou u
 metricsPageTotalRetentionQueryTitle = Retenção total
 metricsPageTotalRetentionQueryDescription = Período de tempo em que os utilizadores têm criado capturas, agrupado por semana
 metricsPageTotalRetentionQueryUsers = Número de utilizadores
-metricsPageTotalRetentionQueryDays = Dias que o utilizador têm criado capturas
+metricsPageTotalRetentionQueryDays = Dias que o utilizador tem criado capturas
 metricsPageVersionQueryTitle = Versão do extra
 metricsPageVersionQueryDescription = A versão do extra utilizada durante o início de sessão, nos últimos 14 dias
 metricsPageVersionQueryUsers = Número de utilizadores com sessão iniciada
@@ -244,6 +248,6 @@ metricsPageVersionQueryVersion = Versão do extra
 metricsPageVersionQueryLastSeen = Dia
 metricsPageHeader = Métricas
 // Note: { $created } is a placeholder for a localized date and time, like '4/21/2017, 3:40:04 AM'
-metricsPageGeneratedDateTime = Geradas a: { $created }
+metricsPageGeneratedDateTime = Geradas em: { $created }
 // Note { $time } is a placeholder for a number of milliseconds, like '100'
 metricsPageDatabaseQueryTime = (tempo da base de dados: { $time }ms)
