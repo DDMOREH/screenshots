@@ -623,7 +623,6 @@ app.post("/api/set-login-cookie", function(req, res) {
   });
 });
 
-<<<<<<< HEAD
 /** This endpoint is used by the site to confirm if the cookie was set */
 app.get("/api/set-login-cookie", function(req, res) {
   if (!('check' in req.query)) {
@@ -637,26 +636,6 @@ app.get("/api/set-login-cookie", function(req, res) {
   }
 });
 
-app.put("/data/:id/:domain", upload.single('blob'), function(req, res) {
-  let slowResponse = config.testing.slowResponse;
-  let failSometimes = config.testing.failSometimes;
-  if (failSometimes && Math.floor(Math.random() * failSometimes)) {
-    console.log("Artificially making request fail"); // eslint-disable-line no-console
-    res.status(500);
-    res.end();
-    return;
-  }
-  let bodyObj = [];
-  if (req.body.shot && req.file) {
-    bodyObj = JSON.parse(req.body.shot);
-    let clipId = Object.getOwnPropertyNames(bodyObj.clips)[0];
-    let b64 = req.file.buffer.toString("base64");
-    let contentType = req.file.mimetype;
-    if (contentType != "image/png" && contentType != "image/jpeg") {
-      // Force PNG as a fallback
-      mozlog.warn("invalid-upload-content-type", {contentType});
-      contentType = "image/png";
-=======
 app.put("/data/:id/:domain",
   upload.fields([{name: "blob", maxCount: 1}, {name: "thumbnail", maxCount: 1}]),
   function(req, res) {
@@ -667,7 +646,6 @@ app.put("/data/:id/:domain",
       res.status(500);
       res.end();
       return;
->>>>>>> master
     }
     let bodyObj = [];
     if (req.body.shot && req.files) {
