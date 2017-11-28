@@ -35,7 +35,8 @@ this.ui = (function() { // eslint-disable-line no-unused-vars
       if (el.classList &&
           (el.classList.contains("myshots-button") ||
            el.classList.contains("visible") ||
-           el.classList.contains("full-page"))) {
+           el.classList.contains("full-page") ||
+           el.classList.contains("cancel-shot"))) {
         return true;
       }
       el = el.parentNode;
@@ -302,13 +303,14 @@ this.ui = (function() { // eslint-disable-line no-unused-vars
                        <div class="face"></div>
                      </div>
                      <div class="preview-instructions" data-l10n-id="screenshotInstructions"></div>
+                     <button class="cancel-shot">${browser.i18n.getMessage("cancelScreenshot")}</button>
                      <div class="myshots-all-buttons-container">
                        ${isDownloadOnly() ? '' : `
-                         <button class="myshots-button myshots-link" tabindex="1" data-l10n-id="myShotsLink"></button>
+                         <button class="myshots-button" tabindex="1" data-l10n-id="myShotsLink"></button>
                          <div class="spacer"></div>
                        `}
-                       <button class="myshots-button visible" tabindex="2" data-l10n-id="saveScreenshotVisibleArea"></button>
-                       <button class="myshots-button full-page" tabindex="3" data-l10n-id="saveScreenshotFullPage"></button>
+                       <button class="visible" tabindex="2" data-l10n-id="saveScreenshotVisibleArea"></button>
+                       <button class="full-page" tabindex="3" data-l10n-id="saveScreenshotFullPage"></button>
                      </div>
                    </div>
                  </div>
@@ -329,6 +331,8 @@ this.ui = (function() { // eslint-disable-line no-unused-vars
               "click", watchFunction(assertIsTrusted(standardOverlayCallbacks.onClickVisible)));
             overlay.querySelector(".full-page").addEventListener(
               "click", watchFunction(assertIsTrusted(standardOverlayCallbacks.onClickFullPage)));
+            overlay.querySelector(".cancel-shot").addEventListener(
+              "click", watchFunction(assertIsTrusted(standardOverlayCallbacks.onClickCancel)));
             resolve();
           }), {once: true});
           document.body.appendChild(this.element);
@@ -382,7 +386,11 @@ this.ui = (function() { // eslint-disable-line no-unused-vars
 
   function getAttributeText(l10nID) {
     let text = browser.i18n.getMessage(l10nID);
-    return text && text.replace('"', "&quot;");
+    return text &&
+      text.replace("&", "&amp;")
+        .replace('"', "&quot;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;");
   }
 
   let iframePreview = exports.iframePreview = {
@@ -410,18 +418,23 @@ this.ui = (function() { // eslint-disable-line no-unused-vars
                   <div class="preview-image">
                     <div class="preview-buttons">
                       <button class="highlight-button-cancel"
-                        title="${getAttributeText("cancelScreenshot")}"></button>
+                        title="${getAttributeText("cancelScreenshot")}"><img
+                        src="${browser.extension.getURL("icons/cancel.svg")}" /></button>
                       <button class="highlight-button-copy"
-                        title="${getAttributeText("copyScreenshot")}"></button>
+                        title="${getAttributeText("copyScreenshot")}"><img
+                        src="${browser.extension.getURL("icons/copy.svg")}" /></button>
                       ${isDownloadOnly() ?
                         `<button class="highlight-button-download download-only-button"
-                                 title="${getAttributeText("downloadScreenshot")}"
-                                 data-l10n-id="downloadScreenshot"></button>` :
+                          title="${getAttributeText("downloadScreenshot")}"><img
+                          src="${browser.extension.getURL("icons/download.svg")}"
+                          />${browser.i18n.getMessage("downloadScreenshot")}</button>` :
                         `<button class="highlight-button-download"
-                                 title="${getAttributeText("downloadScreenshot")}"></button>
+                          title="${getAttributeText("downloadScreenshot")}"><img
+                          src="${browser.extension.getURL("icons/download.svg")}" /></button>
                          <button class="preview-button-save"
-                                 title="${getAttributeText("saveScreenshotSelectedArea")}"
-                                 data-l10n-id="saveScreenshotSelectedArea"></button>`
+                          title="${getAttributeText("saveScreenshotSelectedArea")}"><img
+                          src="${browser.extension.getURL("icons/cloud.svg")}"
+                          />${browser.i18n.getMessage("saveScreenshotSelectedArea")}</button>`
                       }
                     </div>
                   </div>
@@ -700,24 +713,39 @@ this.ui = (function() { // eslint-disable-line no-unused-vars
       boxEl = makeEl("div", "highlight");
       let buttons = makeEl("div", "highlight-buttons");
       let cancel = makeEl("button", "highlight-button-cancel");
+      let cancelImg = makeEl("img");
+      cancelImg.src = browser.extension.getURL("icons/cancel.svg");
       cancel.title = browser.i18n.getMessage("cancelScreenshot");
+      cancel.appendChild(cancelImg);
       buttons.appendChild(cancel);
 
       let copy = makeEl("button", "highlight-button-copy");
       copy.title = browser.i18n.getMessage("copyScreenshot");
+      let copyImg = makeEl("img");
+      copyImg.src = browser.extension.getURL("icons/copy.svg");
+      copy.appendChild(copyImg);
       buttons.appendChild(copy);
 
       let download, save;
 
       if (isDownloadOnly()) {
         download = makeEl("button", "highlight-button-download download-only-button");
+        let downloadImg = makeEl("img");
+        downloadImg.src = browser.extension.getURL("icons/download.svg");
+        download.appendChild(downloadImg);
+        download.append(browser.i18n.getMessage("downloadScreenshot"));
         download.title = browser.i18n.getMessage("downloadScreenshot");
-        download.textContent = browser.i18n.getMessage("downloadScreenshot");
       } else {
         download = makeEl("button", "highlight-button-download");
         download.title = browser.i18n.getMessage("downloadScreenshot");
+        let downloadImg = makeEl("img");
+        downloadImg.src = browser.extension.getURL("icons/download.svg");
+        download.appendChild(downloadImg);
         save = makeEl("button", "highlight-button-save");
-        save.textContent = browser.i18n.getMessage("saveScreenshotSelectedArea");
+        let saveImg = makeEl("img");
+        saveImg.src = browser.extension.getURL("icons/cloud.svg");
+        save.appendChild(saveImg);
+        save.append(browser.i18n.getMessage("saveScreenshotSelectedArea"));
         save.title = browser.i18n.getMessage("saveScreenshotSelectedArea");
       }
       buttons.appendChild(download);
